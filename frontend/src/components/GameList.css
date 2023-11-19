@@ -1,0 +1,22 @@
+/* Assuming a grid layout to display game components */
+.game-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Adjust column size as needed */
+    gap: 20px; /* Adjust gap between components */
+  }
+  
+  .game-card {
+    /* Styling for each game card */
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    padding: 20px;
+    /* Add other styles to match the design */
+  }
+  
+  /* Additional styling for game card elements like title, player count, etc. */
+  .game-card h3 {
+    font-size: 18px;
+    /* Other styles */
+  }
+  
+  /* Apply styling for other elements as needed */
