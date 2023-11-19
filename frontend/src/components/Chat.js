@@ -10,8 +10,10 @@ const Chat = ({ gameId }) => {
     const newSocket = io('http://localhost:5000'); // Replace with your Flask server address
     setSocket(newSocket);
 
+    newSocket.emit('joinRoom', { room: `lobby_${gameId}` });
+
     return () => newSocket.close();
-  }, []);
+  }, [gameId]);
 
   useEffect(() => {
     if (!socket) return;
@@ -30,6 +32,13 @@ const Chat = ({ gameId }) => {
     setMessageText('');
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   return (
     <div>
       {/* Chat UI components */}
@@ -42,6 +51,7 @@ const Chat = ({ gameId }) => {
         type="text"
         value={messageText}
         onChange={(e) => setMessageText(e.target.value)}
+        onKeyPress={handleKeyPress}
       />
       <button onClick={sendMessage}>Send</button>
     </div>
