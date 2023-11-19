@@ -1,37 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
-const Chat = ({ sendMessage }) => {
-  const [inputMessage, setInputMessage] = useState('');
+const Chat = ({ gameId }) => {
+  const [socket, setSocket] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [messageText, setMessageText] = useState('');
 
-  const handleSendMessage = () => {
-    if (inputMessage.trim() !== '') {
-      sendMessage(inputMessage);
-      setInputMessage('');
-    }
-  };
+  useEffect(() => {
+    const newSocket = io('http://localhost:5000'); // Replace with your Flask server address
+    setSocket(newSocket);
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault(); // Prevents new line in the input field
-      handleSendMessage();
-    }
+    return () => newSocket.close();
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on('message', (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => socket.off('message');
+  }, [socket]);
+
+  const sendMessage = () => {
+    if (!socket || !messageText.trim()) return;
+
+    socket.emit('chatMessage', { room: `lobby_${gameId}`, message: messageText });
+    setMessageText('');
   };
 
   return (
     <div>
-      {/* Chat Display */}
-      {/* Render the messages here */}
-
-      {/* Chat Input */}
+      {/* Chat UI components */}
+      <ul>
+        {messages.map((msg, index) => (
+          <li key={index}>{msg}</li>
+        ))}
+      </ul>
       <input
         type="text"
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-        onKeyDown={handleKeyDown}
-        placeholder="Type your message..."
-        style={{ marginRight: '10px' }}
+        value={messageText}
+        onChange={(e) => setMessageText(e.target.value)}
       />
-      <button onClick={handleSendMessage}>Send</button>
+      <button onClick={sendMessage}>Send</button>
     </div>
   );
 };

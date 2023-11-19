@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import axios from '../config/axios'; // Assuming axios.js holds the Axios instance with baseURL set to http://localhost:5000
 import Chat from './Chat'; // Import the Chat component
 
 const Lobby = () => {
   const { gameId } = useParams();
-  const location = useLocation();
-  const gameName = location.state && location.state.gameName;
-
+  const [gameName, setGameName] = useState('');
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    // Fetch the game name based on the game ID
+    axios.get(`/api/game/${gameId}`)
+      .then(response => {
+        setGameName(response.data.gameName);
+      })
+      .catch(error => {
+        console.error('Error fetching game name:', error);
+      });
+  }, [gameId]);
 
   const handleReceiveMessage = (message) => {
     const newMessage = { text: message, sender: 'You' };

@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from '../config/axios'; // Assuming axios.js holds the Axios instance with baseURL set to http://localhost:5000
 
 const GameList = () => {
   const [games, setGames] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulating fetching game data from backend API
-    const mockGameData = [
-      { id: 1, name: 'Game 1', playersInGame: 3, playersInLobby: 5 },
-      { id: 2, name: 'Game 2', playersInGame: 2, playersInLobby: 4 },
-      // Add other mock games as needed
-    ];
-
-    setGames([...mockGameData]);
+    axios.get('/api/games')
+      .then(response => {
+        setGames(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching games:', error);
+      });
   }, []);
 
-  const joinLobby = (gameId, gameName) => {
-    // Redirect to the lobby page with game ID and game name
-    navigate(`/lobby/${gameId}`, { state: { gameName } });
+  const joinLobby = (gameId) => {
+    axios.post(`/api/join-lobby/${gameId}`)
+      .then(response => {
+        // Handle successful lobby join
+        console.log(response.data.message);
+        // Redirect to the lobby page after successful join (Modify this part based on your routing system)
+        window.location.href = `/lobby/${gameId}`; // Redirect to the lobby page for the specific game
+      })
+      .catch(error => {
+        console.error('Error joining lobby:', error);
+      });
   };
 
   return (
@@ -30,8 +36,7 @@ const GameList = () => {
             <div>{game.name}</div>
             <div>Players in game: {game.playersInGame}</div>
             <div>Lobby players: {game.playersInLobby}</div>
-            {/* Use a button for Join Lobby */}
-            <button onClick={() => joinLobby(game.id, game.name)}>Join Lobby</button>
+            <button onClick={() => joinLobby(game.id)}>Join Lobby</button>
           </li>
         ))}
       </ul>
