@@ -49,14 +49,14 @@ def update_players_in_game():
 def handle_join_room(data):
     room = data['room']
     join_room(room)
-    players_in_room = get_online_players(room)
+    players_in_room = get_online_players(socketio=socketio, room=room)
     socketio.emit('updateOnlinePlayers', players_in_room, room=room)
 
 @socketio.on('leaveRoom')
 def handle_leave_room(data):
     room = data['room']
     leave_room(room)
-    players_in_room = get_online_players(room)
+    players_in_room = get_online_players(socketio=socketio, room=room)
     socketio.emit('updateOnlinePlayers', players_in_room, room=room)
 
 @socketio.on('chatMessage')

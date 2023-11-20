@@ -5,7 +5,7 @@ const GameList = () => {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/games')
+    axios.get('/api/game_list')
       .then(response => {
         setGames(response.data);
       })
