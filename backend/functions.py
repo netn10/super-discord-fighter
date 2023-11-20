@@ -1,6 +1,7 @@
 import requests
 from flask_socketio import SocketIO
 
+
 def fetch_players_in_game(steam_api_key: str, steam_game_id: str) -> int:
     """
     Fetches the number of players in a specific game using the Steam API.
@@ -14,13 +15,16 @@ def fetch_players_in_game(steam_api_key: str, steam_game_id: str) -> int:
     """
 
     # Make a GET request to the Steam API to get the number of current players for the specified game ID
-    response = requests.get(f'https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={steam_game_id}&key={steam_api_key}')
+    response = requests.get(
+        f"https://api.steampowered.com/ISteamUserStats/GetNumberOfCurrentPlayers/v1/?appid={steam_game_id}&key={steam_api_key}"
+    )
 
     if response.status_code == 200:
         # Extract the player count from the API response
-        return response.json().get('response', {}).get('player_count', 0)
+        return response.json().get("response", {}).get("player_count", 0)
 
     return 0  # Return 0 if unable to fetch player count
+
 
 def get_online_players(socketio: SocketIO, room: str):
     """
