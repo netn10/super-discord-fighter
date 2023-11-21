@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../config/axios'; // Assuming axios.js holds the Axios instance with baseURL set to http://localhost:5000
+import './GameList.css';
 
 const GameList = () => {
   const [games, setGames] = useState([]);
@@ -28,18 +29,20 @@ const GameList = () => {
   };
 
   return (
-    <div>
+    <div className="game-list">
       <h2>Game List</h2>
-      <ul>
+      <div className="card-container">
         {games.map(game => (
-          <li key={game.id}>
-            <div>{game.name}</div>
-            <div>Players in game: {game.playersInGame}</div>
-            <div>Lobby players: {game.playersInLobby}</div>
-            <button onClick={() => joinLobby(game.id)}>Join Lobby</button>
-          </li>
+          <div className="card" key={game.id}>
+            <div className="card-header">{game.name}</div>
+            <div className="card-body">
+              <p>Players in game: {game.playersInGame}</p>
+              <p>Lobby players: {game.playersInLobby}</p>
+              <button onClick={() => joinLobby(game.id)}>Join Lobby</button>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
