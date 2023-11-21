@@ -4,6 +4,17 @@ import './GameList.css';
 
 const GameList = () => {
   const [games, setGames] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Function to handle search input change
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Filter the games based on search term
+  const filteredGames = games.filter((game) =>
+    game.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     axios.get('/api/game_list')
@@ -14,6 +25,17 @@ const GameList = () => {
         console.error('Error fetching games:', error);
       });
   }, []);
+
+    // Function to handle joining a random lobby
+    const joinRandomLobby = () => {
+      // Logic to join a random lobby goes here
+      const randomGame = filteredGames[Math.floor(Math.random() * filteredGames.length)];
+      console.log(randomGame);
+      if (randomGame) {
+        // Join the lobby of the randomly selected game
+        joinLobby(randomGame.id); // Replace with your joinLobby function
+      }
+    };
 
   const joinLobby = (gameId) => {
     axios.post(`/api/join-lobby/${gameId}`)
@@ -29,22 +51,32 @@ const GameList = () => {
   };
 
   return (
-    <div className="game-list">
+    <div>
       <h2>Game List</h2>
-      <div className="card-container">
-        {games.map(game => (
-          <div className="card" key={game.id}>
+      <input
+        type="text"
+        placeholder="Search games..."
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+      <button onClick={joinRandomLobby}>Join Random</button>
+      <ul>
+      <div className="card-container"> {/* Maintain the card-container */}
+        {filteredGames.map((game) => (
+          <li key={game.id} className="card"> {/* Add back the card class */}
             <div className="card-header">{game.name}</div>
             <div className="card-body">
-              <p>Players in game: {game.playersInGame}</p>
-              <p>Lobby players: {game.playersInLobby}</p>
+              <div>Players in game: {game.playersInGame}</div>
+              <div>Lobby players: {game.playersInLobby}</div>
               <button onClick={() => joinLobby(game.id)}>Join Lobby</button>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+        </div> {/* Maintain the card-container */}
+      </ul>
     </div>
   );
 };
+
 
 export default GameList;
