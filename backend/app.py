@@ -32,9 +32,14 @@ def join_lobby(game_id):
     # Logic to join a specific game lobby
     for game in game_list:
         if game["id"] == game_id:
-            game["playersInLobby"] += 1
-            break
-    return jsonify({"message": "Joined lobby successfully"})
+            if "playersInLobby" not in game:
+                # Initialize 'playersInLobby' if it doesn't exist
+                game["playersInLobby"] = 1
+            else:
+                # Increment 'playersInLobby' if it exists
+                game["playersInLobby"] += 1
+            return jsonify({"message": "Joined lobby successfully"})
+    return jsonify({"error": "Game not found"})
 
 
 # Endpoint to update playersInGame from Steam API
