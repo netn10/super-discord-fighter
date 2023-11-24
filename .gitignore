@@ -1,2 +1,4 @@
 
 *.pyc
+.trunk
+node_modules
