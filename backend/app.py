@@ -13,8 +13,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")  # Initialize a SocketIO app
 
 usernames = set()  # Using a set to store unique usernames
 
-@app.route('/api/registerlogin', methods=['POST'])
-def register_login():
+@app.route('/api/register', methods=['POST'])
+def register():
     data = request.json
     username = data.get('username')
 
@@ -23,7 +23,17 @@ def register_login():
 
     usernames.add(username)
 
-    return jsonify({'message': 'Registration/Login successful'}), 201
+    return jsonify({'message': 'Registration successful'}), 201
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    data = request.json
+    username = data.get('username')
+
+    if username not in usernames:
+        return jsonify({'error': 'Username does not exist'}), 404
+
+    return jsonify({'message': 'Login successful'}), 200
 
 # Flask routes for fetching game data and updating lobby count
 @app.route("/api/game_list", methods=["GET"])

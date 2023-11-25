@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../config/axios'; // Assuming axios.js holds the Axios instance with baseURL set to http://localhost:5000
-import './GameList.css';
+import './GameList.css'; // Import your CSS file for styling
 
 const GameList = () => {
   const [games, setGames] = useState([]);

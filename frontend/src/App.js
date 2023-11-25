@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import GameList from './components/GameList';
 import Lobby from './components/Lobby';
 import About from './components/About';
-import RegisterLogin from './components/RegisterLogin'; // Import the RegisterLogin component
+import Register from './components/Register'; // Import the Register component
+import Login from './components/Login'; // Import the Login component
 
 function App() {
   return (
@@ -17,8 +18,9 @@ function App() {
               <ul>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/about">About</Link></li>
-                {/* Update the link to point to the RegisterLogin component */}
-                <li><Link to="/registerlogin">Register / Login</Link></li>
+                {/* Separate links for Register and Login */}
+                <li><Link to="/register">Register</Link></li>
+                <li><Link to="/login">Login</Link></li>
               </ul>
             </nav>
           </div>
@@ -28,8 +30,10 @@ function App() {
             <Route path="/" element={<GameList />} />
             <Route path="/lobby/:gameId" element={<Lobby />} />
             <Route path="/about" element={<About />} />
-            {/* Use the RegisterLogin component for both registration and login */}
-            <Route path="/registerlogin" element={<RegisterLogin />} />
+            {/* Route for the Register component */}
+            <Route path="/register" element={<Register />} />
+            {/* Route for the Login component */}
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
         <footer>
