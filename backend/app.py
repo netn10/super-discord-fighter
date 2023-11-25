@@ -11,6 +11,19 @@ app = Flask(__name__)  # Initialize a Flask app
 CORS(app)  # Enable CORS for all routes by attaching CORS to your Flask app
 socketio = SocketIO(app, cors_allowed_origins="*")  # Initialize a SocketIO app
 
+usernames = set()  # Using a set to store unique usernames
+
+@app.route('/api/registerlogin', methods=['POST'])
+def register_login():
+    data = request.json
+    username = data.get('username')
+
+    if username in usernames:
+        return jsonify({'error': 'Username already exists'}), 400
+
+    usernames.add(username)
+
+    return jsonify({'message': 'Registration/Login successful'}), 201
 
 # Flask routes for fetching game data and updating lobby count
 @app.route("/api/game_list", methods=["GET"])
